@@ -1,0 +1,42 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  prerequisites:
+      runs-on: ubuntu-latest
+
+    # Steps for prepare the app build
+      steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Clone the app repository in the app sub folder
+        run: |
+          mkdir -p app
+          cd app
+          git clone https://gitlab.drosalys.net/ipme/steamish.git
+      
+      - name: Add app cloned to the artifacts
+        with:
+          name: app-clone
+          retention-days: 1
+          path: app/
+    
+  # This workflow contains a single job called "build"
+  build:      
+    needs: prerequisites
+    runs-on: ubuntu-latest    
+    steps:
+    - name: Build the app
