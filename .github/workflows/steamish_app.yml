@@ -23,6 +23,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Clone the app repository in the app sub folder
+      shell: bash
         run: |
           mkdir -p app
           cd app
