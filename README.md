@@ -32,17 +32,22 @@ Project is a part of AdminSys-DevOps learning, fallowing [this instructions.](ht
 Terraform action => allocate the virtual machine
 
 Installing the operating system on the VM manually (through ESXI)
+
 Install basic and enabled ssh
 
 Ansible action => configure the VM server itself
+
 Ansible action => install components to run the app.
 
 ### App (auto and manual job)
 CI action => clone the app src repos, build the app and launch tests. 
+
 CD action => if the tests passed, build the docker image of the app and deploy to registry
+
 CD action => from the server, pull the app docker image (and components) from repository and launch the app
 
 ### Monitoring (not auto, manual job only)
 Ansible action => Install Zabbix on the server and configure it
+
 Ansible action => Configure the back up on the VM server
 
