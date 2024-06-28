@@ -51,3 +51,5 @@ Ansible action => Install Zabbix on the server and configure it
 
 Ansible action => Configure the back up on the VM server
 
+
+Bien penser à éditer DATABASE_URL dans le .env pour la bdd
