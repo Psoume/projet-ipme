@@ -2,7 +2,7 @@
 # JavaScript build stage
 FROM node:21-alpine AS js
 WORKDIR /var/www/html
-COPY package.json yarn.lock ./
+# COPY package.json yarn.lock ./
 COPY . . 
 RUN yarn install
 RUN yarn build 
@@ -19,12 +19,13 @@ RUN install-php-extensions zip xmlrpc exif bz2 gd imap intl pdo_mysql opcache ti
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
-RUN composer install --no-dev --optimize-autoloader
+# RUN composer install --no-dev --optimize-autoloader
+RUN composer install
 COPY --from=js /var/www/html/node_modules ./node_modules
 COPY --from=js /var/www/html/public/build ./public/build
 COPY ./config/php.ini /usr/local/etc/php/php.ini
 RUN chown -R www-data:www-data ./var
-CMD [ "sh","-c","make && php-fpm"]
+CMD [ "sh","-c","make all && php-fpm"]
 
 
 
