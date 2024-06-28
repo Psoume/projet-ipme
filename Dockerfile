@@ -5,7 +5,6 @@ WORKDIR /var/www/html
 COPY package.json yarn.lock ./
 COPY . . 
 RUN yarn install
-# RUN yarn add typescript tsc
 RUN yarn build 
 
 # Composer build stage
@@ -21,7 +20,6 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 RUN composer install --no-dev --optimize-autoloader
-## RUN composer install 
 COPY --from=js /var/www/html/node_modules ./node_modules
 COPY --from=js /var/www/html/public/build ./public/build
 COPY ./config/php.ini /usr/local/etc/php/php.ini
