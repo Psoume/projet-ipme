@@ -1,0 +1,116 @@
+- hosts: all
+  become: true
+  
+  tasks:
+    - name: Ensure Podman and related packages are removed
+      ansible.builtin.dnf:
+        name:
+          - podman
+          - podman-docker
+          - runc
+        state: absent
+      ignore_errors: true
+
+    - name: Update and upgrade all packages to the latest version
+      ansible.builtin.dnf:
+        update_cache: yes
+        name: "*"
+        state: latest
+
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name:
+          - dnf-plugins-core
+          - curl
+          - gnupg2
+          - ca-certificates
+        state: present
+
+    - name: Add Docker's official GPG key
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://download.docker.com/linux/centos/gpg
+
+    - name: Add Docker repository
+      ansible.builtin.yum_repository:
+        name: docker
+        description: Docker CE Repository
+        baseurl: >-
+          https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        enabled: yes
+
+    - name: Install Docker and related packages
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-compose-plugin
+
+    - name: Add Docker group
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    - name: Add user to Docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Enable and start Docker services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - docker
+        - containerd
+
+    - name: Ajouter un utilisateur sudoer
+      ansible.builtin.user:
+        name: adminuser
+        groups: wheel
+        shell: /bin/bash
+        password: "{{ 'admin123!' | password_hash('sha512') }}"
+
+    - name: Configurer SSH pour n'accepter que les connexions par clé
+      ansible.builtin.copy:
+        src: sshd_config
+        dest: /etc/ssh/sshd_config
+      notify: Restart SSH
+    
+    - name: user zabbix 
+      ansible.builtin.user:
+        name: zabbix
+        group: zabbix
+        shell: /bin/bash
+        password: "{{ 'zabbix123!' | password_hash('sha512')}}"
+
+    - name: Configurer le pare-feu avec Firewalld
+      ansible.builtin.firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+      loop:
+        - ssh
+        - http
+        - https
+      notify: Reload Firewalld
+
+  handlers:
+    - name: Restart SSH
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Reload Firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded

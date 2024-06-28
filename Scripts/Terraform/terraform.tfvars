@@ -1,0 +1,17 @@
+user          = "mgaspard@vsphere.local"
+password      = "Y?tePe^{8"
+vsphere_server = "192.168.140.10"
+host          = "192.168.140.9"
+datacenter    = "Datacenter"
+datastore     = "datastore2"
+name          = "Steamish_MLG"
+network       = "VM Network"
+cpus          = 2
+memory        = 4096
+hostname      = "maxime"
+domain        = "maxime.com"
+static_ip     = "192.168.140.68"
+netmask       = "24"
+gateway       = "192.168.140.1"
+subnet_mask   = "255.255.255.0"
+iso_path      = "ISO/AlmaLinux-8.10-x86_64-minimal.iso"
