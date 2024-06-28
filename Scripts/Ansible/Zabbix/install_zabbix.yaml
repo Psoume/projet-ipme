@@ -5,6 +5,12 @@
   collections:
     - community.mysql.mysql_db
     - ansible.posix
+  
+  environment:
+    DB_SERVER_HOST: {{ zabbix_db_ip }}
+    ZBX_SERVER_HOST: {{ zabbix_server_ip }}
+    PHP_TZ: {{ php_timezone }}
+
   tasks:
     - name: Install Python
       ansible.builtin.dnf:
@@ -62,27 +68,27 @@
       ansible.builtin.template:
         src: ./templates/zabbix_server.j2
         dest: /etc/zabbix/zabbix_server.conf
-        owner: zabbix
-        group: zabbix
-        mode: '0644'
+        owner: {{ zabbix_user }}
+        group: {{ zabbix_user_grp }}
+        mode: o=rw,u=r,g=r
         force: true
 
     - name: Copy zabbix-agent config file
       ansible.builtin.template:
         src: ./templates/zabbix_agent.j2
         dest: /etc/zabbix/zabbix_agentd.conf
-        owner: zabbix
-        group: zabbix
-        mode: '0644'
+        owner: {{ zabbix_user }}
+        group: {{ zabbix_user_grp }}
+        mode: o=rw,u=r,g=r
         force: true
 
     - name: Copy zabbix-web config file
       ansible.builtin.template:
         src: ./templates/zabbix_php.j2
         dest: /etc/httpd/conf.d/zabbix.conf
-        owner: zabbix
-        group: zabbix
-        mode: '0644'
+        owner: {{ zabbix_user }}
+        group: {{ zabbix_user_grp }}
+        mode: o=rw,u=r,g=r
         force: true
 
     - name: activate communication between web interface and zabbix server

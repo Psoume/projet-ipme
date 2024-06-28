@@ -1,12 +1,10 @@
-user_ipme: "Ipme"
-user_zabbix: "zabbix"
+zabbix_user: "zabbix"
+zabbix_user_grp: "zabbix"
+zabbix_password: "zabbixUsr!159"
 
-user_password: "1234"
-zabbix_password: "12345"
-
-path_repo_docker: "https://download.docker.com/linux/centos/docker-ce.repo"
-
-ip_server: 127.0.0.1
-zabbix_password_db: "password"
-zabbix_user_db: "zabbix"
+zabbix_db_ip: 127.0.0.1
+zabbix_server_ip: 127.0.0.1
 zabbix_db: "zabbix"
+zabbix_user_db: "zabbix"
+zabbix_password_db: "zabbixDB!753"
+php_timezone: "Europe/Paris"
