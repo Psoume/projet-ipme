@@ -21,10 +21,10 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: rootpassword
     healthcheck:
-      test:  ["CMD", "healthcheck.sh", "--connect"]
+      test:  ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       interval: 30s
       timeout: 5s
-      retries: 25
+      retries: 10
     volumes:
       - db:/var/lib/mysql
 
