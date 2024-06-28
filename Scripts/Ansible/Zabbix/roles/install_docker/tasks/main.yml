@@ -1,0 +1,11 @@
+---
+- name: Install Docker
+  ansible.builtin.shell: | 
+    yum-config-manager --add-repo {{ path_repo_docker }}
+    dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+- name: Start docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes

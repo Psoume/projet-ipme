@@ -16,7 +16,6 @@ The first connect is done with default username/password and you have to create 
 
 Set IP address of the docker-agent of the host to the docker network agent container ip.
 
-
 Add the host for the server.
 
 Import the templated dashboard.
@@ -26,4 +25,7 @@ Import the templated dashboard.
 change the .env to set it in secrets.
 
 .env must not be commited (see .gitignore).
+
+Ansible to configure :
+https://docs.ansible.com/ansible/latest/collections/community/zabbix/index.html#plugin-index
 

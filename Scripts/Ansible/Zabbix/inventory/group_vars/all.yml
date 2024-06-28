@@ -1,0 +1,12 @@
+user_ipme: "Ipme"
+user_zabbix: "zabbix"
+
+user_password: "1234"
+zabbix_password: "12345"
+
+path_repo_docker: "https://download.docker.com/linux/centos/docker-ce.repo"
+
+ip_server: 127.0.0.1
+zabbix_password_db: "password"
+zabbix_user_db: "zabbix"
+zabbix_db: "zabbix"

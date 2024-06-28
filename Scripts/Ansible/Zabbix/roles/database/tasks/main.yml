@@ -1,0 +1,30 @@
+---
+- name: Mysqld Installation
+  ansible.builtin.dnf:
+    name: mysql-server
+    state: present
+
+- name: Start the service
+  ansible.builtin.service:
+    name: mysqld
+    state: restarted
+    enabled: true
+
+- name: Config DB for zabbix
+  community.mysql.mysql_db:
+    check_implicit_admin: true
+    name: "{{ zabbix_db }}"
+    state: import
+    target: /tmp/zabbix_dump.sql
+
+- name: Create database user for zabbix
+  community.mysql.mysql_user:
+    name: "{{ zabbix_user_db }}"
+    password: "{{ zabbix_password_db }}"
+    priv: "{{ zabbix_db }}.*:ALL,GRANT"
+    state: present
+
+- name: Simple select query
+  community.mysql.mysql_query:
+    login_db: "{{ zabbix_db }}"
+    query: set global log_bin_trust_function_creators = 1
