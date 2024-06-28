@@ -8,7 +8,6 @@ variable "name" {}
 variable "network" {}
 variable "cpus" {}
 variable "memory" {}
-variable "static_ip" {}
 variable "netmask" {}
 variable "gateway" {}
 variable "domain" {}

@@ -28,14 +28,14 @@ resource "vsphere_virtual_machine" "terraform-test-projectgroup" {
   name             = var.name
   resource_pool_id = data.vsphere_resource_pool.resources.id
   datastore_id     = data.vsphere_datastore.datastore2.id
-  num_cpus   = var.cpus
-  memory     = var.memory
-  guest_id   = "other3xLinux64Guest"
-  
+  num_cpus         = var.cpus
+  memory           = var.memory
+  guest_id         = "other3xLinux64Guest"
+
   network_interface {
-    network_id   = data.vsphere_network.network.id
+    network_id = data.vsphere_network.network.id
   }
-  
+
   disk {
     label            = "disk0"
     size             = 20
@@ -48,15 +48,21 @@ resource "vsphere_virtual_machine" "terraform-test-projectgroup" {
     path         = "ISO/AlmaLinux-8.10-x86_64-minimal.iso"
   }
 
-  cdrom {
-    datastore_id = data.vsphere_datastore.datastore2.id
-    path         = file("${path.module}/kick.cfg")
+  scsi_type = "lsilogic-sas"
+
+  extra_config = {
+    "guestinfo.ks" = "ISO/kickstart.iso",
+    "guestinfo.ip" = "192.168.140.68",
+    "guestinfo.netmask" = "255.255.255.0",
+    "guestinfo.gateway" = "192.168.140.1",
+    "guestinfo.dns" = "192.168.140.1",
+    "guestinfo.hostname" = "yourhostname.domain.com"
   }
 
-  scsi_type  = "lsilogic-sas"
-
-
-
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'inst.ks=http://00.00.00.00/kickstart/ks-osdc-pdp101.cfg ip=192.168.140.68 netmask=255.255.255.0 gateway=192.168.140.1 nameserver=192.168.140.1' > /etc/cmdline.d/ks.cfg",
+      "grubby --update-kernel=ALL --args='inst.ks=http://00.00.00.00/kickstart/ks-osdc-pdp101.cfg ip=192.168.140.68 netmask=255.255.255.0 gateway=192.168.140.1 nameserver=192.168.140.1'"
+    ]
+  }
 }
-
-

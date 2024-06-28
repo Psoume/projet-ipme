@@ -85,6 +85,10 @@
         dest: /etc/ssh/sshd_config
       notify: Restart SSH
     
+    - name: Create group zabbix
+      ansible.builtin.group:
+        name: zabbix
+    
     - name: user zabbix 
       ansible.builtin.user:
         name: zabbix
