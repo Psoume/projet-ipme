@@ -1,0 +1,31 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  run-playbooks:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
+   
+    # Check ssh
+    - name: Setup ssh
+    shell: bash
+        run: |
+         service ssh status
+         eval `ssh-agent -s`
+
+    - name: Run ansible script
+        shell: bash 
+        run: |
+          cd ./Scripts/Ansible
+          # ansible-playbook --private-key ${{secrets.ANSIBLE_DEPLOY_USER_KEY}} -u ${{secrets.ANSIBLE_DEPLOY_USER}} -i hosts.yml zabbix.yml
+
