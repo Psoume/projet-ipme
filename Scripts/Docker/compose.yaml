@@ -3,18 +3,14 @@ services:
     build: 
       context: .
     restart: unless-stopped
-    env_file: .env
+    # env_file: .env
     volumes:
       - web:/var/www/html/
     ports:
       - "9000:9000"
     depends_on:
-      - db
-    healthcheck:
-      test: ["CMD-SHELL", "mariadb -uroot --password=rootpassword -e 'select 1'"] 
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      db:
+      condition: service_healthy
 
   db:
     image: mysql:8.0
@@ -24,6 +20,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: rootpassword
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb -uroot --password=rootpassword -e 'select 1'"] 
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - db:/var/lib/mysql
 
