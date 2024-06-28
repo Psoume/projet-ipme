@@ -1,0 +1,44 @@
+services:
+  php:
+    build: 
+      context: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - web:/var/www/html/
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb -uroot --password=rootpassword -e 'select 1'"] 
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - db:/var/lib/mysql
+
+  nginx:
+    restart: unless-stopped
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - web:/var/www/html/
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - php
+      - db
+
+volumes:
+  db:
+  web:
