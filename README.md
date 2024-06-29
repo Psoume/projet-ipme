@@ -1,6 +1,6 @@
 # projet-ipme
 Steamish
-Project is a part of AdminSys-DevOps learning, fallowing [this instructions.](https://lenaic.notion.site/valuation-de-fin-d-ann-e-de-test-63c31988c34c4ef4ae166945f8d25313)
+Project is a part of AdminSys-DevOps learning, following [this instructions.](https://lenaic.notion.site/valuation-de-fin-d-ann-e-de-test-63c31988c34c4ef4ae166945f8d25313)
 
 ## Server Install
 [See here the command for install](https://github.com/Psoume/projet-ipme/blob/main/Scripts/command.md)
