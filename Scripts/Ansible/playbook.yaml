@@ -1,6 +1,5 @@
 - hosts: all
   become: true
-  
   tasks:
     - name: Ensure Podman and related packages are removed
       ansible.builtin.dnf:
@@ -75,16 +74,43 @@
     - name: Ajouter un utilisateur sudoer
       ansible.builtin.user:
         name: adminuser
-        groups: wheel
+        groups: 
+        - wheel
+        - docker
+        append: yes
         shell: /bin/bash
         password: "{{ 'admin123!' | password_hash('sha512') }}"
+
+    - name: Ajouter la clé publique SSH de adminuser
+      ansible.builtin.copy:
+        src: ~/.ssh/id_ed25519.pub
+        dest: /home/adminuser/.ssh/authorized_keys
+        owner: adminuser
+        group: adminuser
+        mode: '0600'
+
+    - name: Assurez-vous que le répertoire .ssh existe
+      ansible.builtin.file:
+        path: /home/adminuser/.ssh
+        state: directory
+        owner: adminuser
+        group: adminuser
+        mode: '0700'
+
+    - name: Assurez-vous que le fichier authorized_keys a les bonnes permissions
+      ansible.builtin.file:
+        path: /home/adminuser/.ssh/authorized_keys
+        state: file
+        owner: adminuser
+        group: adminuser
+        mode: '0600'
 
     - name: Configurer SSH pour n'accepter que les connexions par clé
       ansible.builtin.copy:
         src: sshd_config
         dest: /etc/ssh/sshd_config
       notify: Restart SSH
-    
+
     - name: Create group zabbix
       ansible.builtin.group:
         name: zabbix
