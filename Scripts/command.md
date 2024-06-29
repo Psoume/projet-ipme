@@ -36,7 +36,7 @@ nmcli d
 
 **3 - Assigning the Static IP Address**
 ```bash
-sudo nmcli con mod ens192 ipv4.addresses 192.168.140.68/24 ipv4.gateway 168.168.140.1 ipv4.dns 8.8.8.8
+sudo nmcli con mod ens192 ipv4.addresses 192.168.140.68/24 ipv4.gateway 192.168.140.1 ipv4.dns 8.8.8.8
 ```
 
 **4 - Applying the Changes**
@@ -52,6 +52,44 @@ ip addr show ens192
 ---------------------------------------------------------------------
 
 # ssh-key
+
+### to generate the ssh
+
+```bash
+ssh-keygen -t ed25519
+```
+
+### Copy the public ip on the vm
+
+```bash
+ssh-copy-id root@192.168.140.68
+```
+
+
+------------------------------------------------------------------
+
+# gen iso file
+
+```bash
+ genisoimage -o kickstart.iso -J -R ks.cfg
+```
+
+------------------------------------------------------------------
+
+# Launch Dockerfile
+
+```bash
+cd Docker && docker build -t <tag> .
+```
+
+# launch Docker compose
+
+```bash
+docker compose up
+```
+
+
+
 
 
 
